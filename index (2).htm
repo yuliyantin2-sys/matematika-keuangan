@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matematika Keuangan Interaktif - SMA Kelas XI (Fase F)</title>
+    
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Inter) -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- KaTeX for LaTeX Math Rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Chart.js for Visual Financial Graphs -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                        },
+                        finance: {
+                            50: '#eff6ff',
+                            100: '#dbeafe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f8fafc; color: #0f172a; }
+        .tab-btn.active {
+            background-color: #059669;
+            color: white;
+            box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
+        .math-box {
+            background: #ffffff;
+            border-left: 4px solid #059669;
+        }
+        .growth-card {
+            background: linear-gradient(135deg, #ecfdf5 0%, #dbeafe 100%);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between">
+
+    <!-- Header Section -->
+    <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex flex-wrap items-center justify-between gap-4">
+            <div class="flex items-center space-x-3">
+                <div class="bg-brand-600 text-white p-2.5 rounded-xl shadow-md">
+                    <i class="fa-solid fa-chart-line text-2xl"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-slate-800 leading-tight">Matematika Keuangan Interaktif</h1>
+                    <p class="text-xs font-medium text-slate-500">Matematika SMA Kelas XI (Fase F) • Growth Mindset & Deep Learning</p>
+                </div>
+            </div>
+
+            <!-- Header Stats & Growth Mindset Badge -->
+            <div class="flex items-center space-x-3">
+                <div class="flex items-center bg-emerald-50 text-emerald-700 px-3 py-1.5 rounded-full text-xs font-semibold border border-emerald-500/20">
+                    <i class="fa-solid fa-brain mr-1.5 text-emerald-600"></i>
+                    <span>Pola Pikir Bertumbuh</span>
+                </div>
+                <div class="flex items-center bg-amber-50 text-amber-700 px-3 py-1.5 rounded-full text-xs font-semibold border border-amber-200">
+                    <i class="fa-solid fa-star mr-1.5 text-amber-500"></i>
+                    <span>XP Matematika: <strong id="xp-counter" class="ml-1 text-sm">0</strong></span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Navigation Tabs -->
+    <nav class="bg-slate-100 border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex overflow-x-auto custom-scrollbar py-2 gap-2">
+            <button onclick="switchTab('f1')" id="tab-btn-f1" class="tab-btn active whitespace-nowrap px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center">
+                <i class="fa-solid fa-percent mr-2"></i> F.1 Bunga Tunggal vs Majemuk
+            </button>
+            <button onclick="switchTab('f2')" id="tab-btn-f2" class="tab-btn whitespace-nowrap px-4 py-2.5 text-slate-600 hover:text-slate-900 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center">
+                <i class="fa-solid fa-house-chimney-dollar mr-2"></i> F.2 Anuitas & Tabel Amortisasi
+            </button>
+            <button onclick="switchTab('f3')" id="tab-btn-f3" class="tab-btn whitespace-nowrap px-4 py-2.5 text-slate-600 hover:text-slate-900 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center">
+                <i class="fa-solid fa-arrow-trend-up mr-2"></i> F.3 Pertumbuhan & Peluruhan
+            </button>
+            <button onclick="switchTab('reflection')" id="tab-btn-reflection" class="tab-btn whitespace-nowrap px-4 py-2.5 text-slate-600 hover:text-slate-900 rounded-xl text-xs sm:text-sm font-semibold transition-all flex items-center">
+                <i class="fa-solid fa-graduation-cap mr-2"></i> Evaluasi & Jurnal Refleksi
+            </button>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT CONTAINER -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-grow w-full">
+
+        <!-- Growth Mindset Encouragement Banner -->
+        <div class="growth-card rounded-2xl p-4 sm:p-5 mb-6 border border-emerald-200 flex items-start sm:items-center justify-between gap-4 shadow-sm">
+            <div class="flex items-start space-x-3">
+                <div class="bg-white p-2.5 rounded-xl text-brand-600 shadow-sm mt-0.5 sm:mt-0">
+                    <i class="fa-solid fa-seedling text-xl"></i>
+                </div>
+                <div>
+                    <h3 class="text-xs sm:text-sm font-bold text-slate-800">Prinsip Belajar Kita Hari Ini (Growth Mindset):</h3>
+                    <p id="growth-quote" class="text-xs sm:text-sm text-slate-600 italic mt-0.5">"Kecerdasan finansial dan matematika bukanlah bakat lahir, melainkan otot mental yang terus tumbuh semakin kamu melatihnya!"</p>
+                </div>
+            </div>
+            <button onclick="nextQuote()" class="text-xs font-semibold text-brand-600 hover:text-brand-700 bg-white px-3 py-1.5 rounded-lg border border-slate-200 hover:border-brand-300 transition whitespace-nowrap">
+                <i class="fa-solid fa-rotate mr-1"></i> Motivasi Lain
+            </button>
+        </div>
+
+        <!-- ================================================================= -->
+        <!-- TAB F.1: BUNGA TUNGGAL VS BUNGA MAJEMUK -->
+        <!-- ================================================================= -->
+        <section id="tab-f1" class="tab-content">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mb-6">
+                <div class="border-b border-slate-100 pb-4 mb-6">
+                    <span class="inline-block px-3 py-1 bg-brand-50 text-brand-600 font-bold text-xs rounded-full mb-2">Tujuan Pembelajaran F.1</span>
+                    <h2 class="text-xl font-bold text-slate-800">Membandingkan Konsep & Pertumbuhan Bunga Tunggal dengan Bunga Majemuk</h2>
+                    <p class="text-sm text-slate-600 mt-1">Sering disebut Albert Einstein sebagai "Keajaiban Dunia ke-8", mari kita temukan beda mendasar pertumbuhan linier vs eksponensial dalam dunia keuangan!</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    <!-- Controls & Interactive Simulator -->
+                    <div class="lg:col-span-5 bg-slate-50 p-5 rounded-xl border border-slate-200 space-y-4">
+                        <h3 class="font-bold text-slate-800 text-sm flex items-center">
+                            <i class="fa-solid fa-sliders text-brand-600 mr-2"></i> Simulator Investasi & Bunga
+                        </h3>
+                        
+                        <!-- Modal / Principal Input -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                Modal Awal ($M_0$): <span id="f1-modal-display" class="font-bold text-brand-600 text-sm">Rp 10.000.000</span>
+                            </label>
+                            <input type="range" id="f1-modal" min="1000000" max="50000000" step="1000000" value="10000000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600" oninput="updateF1()">
+                        </div>
+
+                        <!-- Interest Rate Input -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                Suku Bunga per Tahun ($i$): <span id="f1-rate-display" class="font-bold text-brand-600 text-sm">10%</span>
+                            </label>
+                            <input type="range" id="f1-rate" min="1" max="25" step="1" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600" oninput="updateF1()">
+                        </div>
+
+                        <!-- Time Period Input -->
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">
+                                Jangka Waktu ($n$ tahun): <span id="f1-years-display" class="font-bold text-brand-600 text-sm">10 Tahun</span>
+                            </label>
+                            <input type="range" id="f1-years" min="1" max="20" step="1" value="10" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600" oninput="updateF1()">
+                        </div>
+
+                        <!-- Formulas Summary Card -->
+                        <div class="math-box p-4 rounded-xl text-slate-800 text-xs space-y-2">
+                            <p class="font-bold text-brand-700">Rumus Matematis:</p>
+                            <div>• <strong>Bunga Tunggal:</strong> $M_n = M_0 (1 + n \cdot i)$</div>
+                            <div>• <strong>Bunga Majemuk:</strong> $M_n = M_0 (1 + i)^n$</div>
+                            <p class="text-[11px] text-slate-500 italic mt-1">*Bunga majemuk berbunga di atas bunga (pangkat/eksponensial).</p>
+                        </div>
+                    </div>
+
+                    <!-- Visual Comparison & Chart -->
+                    <div class="lg:col-span-7 flex flex-col justify-between h-full space-y-4">
+                        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+                            <h4 class="text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">Grafik Perbandingan Pertumbuhan Nilai Akhir</h4>
+                            <div class="h-64 relative">
+                                <canvas id="f1-chart"></canvas>
+                            </div>
+                        </div>
+
+                        <!-- Numerical Comparison Table -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 text-center">
+                                <span class="text-xs font-semibold text-slate-500 block">Nilai Akhir Bunga Tunggal</span>
+                                <span id="f1-result-single" class="text-lg font-extrabold text-slate-700">Rp 20.000.000</span>
+                            </div>
+                            <div class="bg-emerald-50 p-4 rounded-xl border border-emerald-200 text-center">
+                                <span class="text-xs font-semibold text-emerald-800 block">Nilai Akhir Bunga Majemuk</span>
+                                <span id="f1-result-compound" class="text-lg font-extrabold text-brand-600">Rp 25.937.424</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deep Learning Checkpoint Quiz F.1 -->
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm">
+                <h3 class="font-bold text-slate-800 text-base mb-3 flex items-center">
+                    <i class="fa-solid fa-circle-check text-emerald-500 mr-2"></i> Latihan Pemahaman Cepat (F.1)
+                </h3>
+                <div class="space-y-4">
+                    <p class="text-sm text-slate-700 leading-relaxed">
+                        Jika kamu menginvestasikan uang sebesar <strong class="text-slate-900">Rp 5.000.000</strong> selama 3 tahun dengan suku bunga majemuk <strong class="text-slate-900">10% per tahun</strong>, berapakah total nilai akhir tabunganmu?
+                    </p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <button onclick="checkAnswerF1(this, false, 'Kurang tepat! Rp 6.500.000 adalah hasil bunga TUNGGAL: 5jt + (3 x 10% x 5jt).')" class="p-3 text-xs text-left border border-slate-200 rounded-xl hover:bg-slate-50 font-semibold transition">
+                            Rp 6.500.000
+                        </button>
+                        <button onclick="checkAnswerF1(this, true, 'Luar biasa! Benar sekali. Hasilnya adalah 5.000.000 x (1,10)³ = Rp 6.655.000.')" class="p-3 text-xs text-left border border-slate-200 rounded-xl hover:bg-slate-50 font-semibold transition">
+                            Rp 6.655.000
+                        </button>
+                        <button onclick="checkAnswerF1(this, false, 'Belum tepat. Coba periksa perhitungan kuadrat/kubik dari (1 + 0.10)³.')" class="p-3 text-xs text-left border border-slate-200 rounded-xl hover:bg-slate-50 font-semibold transition">
+                            Rp 6.000.000
+                        </button>
+                    </div>
+                    <div id="f1-quiz-feedback" class="hidden text-xs p-3 rounded-xl mt-2"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB F.2: ANUITAS & TABEL AMORTISASI PINJAMAN -->
+        <!-- ================================================================= -->
+        <section id="tab-f2" class="tab-content hidden">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mb-6">
+                <div class="border-b border-slate-100 pb-4 mb-6">
+                    <span class="inline-block px-3 py-1 bg-brand-50 text-brand-600 font-bold text-xs rounded-full mb-2">Tujuan Pembelajaran F.2</span>
+                    <h2 class="text-xl font-bold text-slate-800">Menganalisis Anuitas, Angsuran Pokok, dan Bunga Pinjaman</h2>
+                    <p class="text-sm text-slate-600 mt-1">Anuitas adalah pembayaran berkala berjumlah tetap ($A = a_t + b_t$). Mari pelajari bagaimana cicilan KPR atau pinjaman bank bekerja!</p>
+                </div>
+
+                <!-- Guided Deep Explanation & Formula -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200 mb-6">
+                    <h3 class="text-sm font-bold text-slate-800 mb-3 flex items-center">
+                        <i class="fa-solid fa-calculator text-brand-600 mr-2"></i> Konsep Utama Anuitas ($A$)
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                        <div class="math-box p-4 rounded-xl text-center space-y-2">
+                            <span class="text-xl font-bold text-brand-700 block">$$A = \frac{M \cdot i}{1 - (1 + i)^{-n}}$$</span>
+                            <p class="text-xs text-slate-600">
+                                $M$ = Besar Pinjaman Awal | $i$ = Suku Bunga per Periode | $n$ = Jumlah Periode
+                            </p>
+                        </div>
+                        <div class="space-y-2 text-xs text-slate-700 leading-relaxed">
+                            <p><strong>Dua Komponen Utama Anuitas:</strong></p>
+                            <div class="p-2 bg-white rounded-lg border border-slate-200">
+                                <strong>1. Bunga Periode ke-$t$ ($b_t$):</strong> Hitungan bunga dari sisa pinjaman periode sebelumnya.
+                            </div>
+                            <div class="p-2 bg-white rounded-lg border border-slate-200">
+                                <strong>2. Angsuran Pokok ($a_t$):</strong> Bagian cicilan yang benar-benar mengurangi utang pokok ($a_t = A - b_t$).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Amortization Calculator -->
+                <div class="bg-white p-6 rounded-2xl border border-slate-200 mb-6">
+                    <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center">
+                        <i class="fa-solid fa-table-list text-emerald-600 mr-2"></i> Simulator & Tabel Amortisasi Pinjaman KPR/Bank
+                    </h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Pinjaman ($M$):</label>
+                            <input type="number" id="f2-loan" value="12000000" step="1000000" class="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none" oninput="updateF2()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Bunga per Bulan (%):</label>
+                            <input type="number" id="f2-rate" value="1" step="0.1" class="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none" oninput="updateF2()">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Tenor / Jangka Waktu (Bulan):</label>
+                            <input type="number" id="f2-months" value="6" min="1" max="24" class="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none" oninput="updateF2()">
+                        </div>
+                    </div>
+
+                    <div class="bg-brand-50 p-4 rounded-xl border border-brand-100 mb-4 flex flex-wrap justify-between items-center gap-2">
+                        <span class="text-xs font-bold text-brand-900">Besar Anuitas Bulanan ($A$):</span>
+                        <span id="f2-annuity-val" class="text-xl font-extrabold text-brand-700">Rp 2.070.623</span>
+                    </div>
+
+                    <!-- Amortization Schedule Table -->
+                    <div class="overflow-x-auto custom-scrollbar">
+                        <table class="w-full text-xs text-left text-slate-700 border-collapse">
+                            <thead class="bg-slate-100 text-slate-800 uppercase font-bold text-[10px]">
+                                <tr>
+                                    <th class="p-3 rounded-l-lg">Bulan ke-</th>
+                                    <th class="p-3">Sisa Utang Awal</th>
+                                    <th class="p-3">Bunga ($b_t$)</th>
+                                    <th class="p-3">Angsuran Pokok ($a_t$)</th>
+                                    <th class="p-3">Total Anuitas ($A$)</th>
+                                    <th class="p-3 rounded-r-lg">Sisa Utang Akhir</th>
+                                </tr>
+                            </thead>
+                            <tbody id="f2-amortization-body" class="divide-y divide-slate-100">
+                                <!-- Generated by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB F.3: PERTUMBUHAN & PELURUHAN NILAI (INVESTASI VS DEPRESIASI) -->
+        <!-- ================================================================= -->
+        <section id="tab-f3" class="tab-content hidden">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mb-6">
+                <div class="border-b border-slate-100 pb-4 mb-6">
+                    <span class="inline-block px-3 py-1 bg-brand-50 text-brand-600 font-bold text-xs rounded-full mb-2">Tujuan Pembelajaran F.3</span>
+                    <h2 class="text-xl font-bold text-slate-800">Model Matematika Pertumbuhan & Peluruhan dalam Konteks Keuangan</h2>
+                    <p class="text-sm text-slate-600 mt-1">Mengapa nilai mobil baru menyusut setiap tahun (peluruhan/depresiasi), sementara nilai tanah atau indeks saham cenderung membesar (pertumbuhan)?</p>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                    <!-- Pertumbuhan (Growth) Card -->
+                    <div class="bg-emerald-50/60 p-5 rounded-2xl border border-emerald-200">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-chart-line text-emerald-600 text-lg"></i>
+                            <h3 class="font-bold text-slate-800 text-sm">1. Pertumbuhan Eksponensial ($N_n$)</h3>
+                        </div>
+                        <div class="math-box p-3 rounded-xl text-center mb-3">
+                            <span class="text-lg font-bold text-emerald-800">$$N_n = N_0(1 + r)^n$$</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Digunakan untuk pemodelan kenaikan nilai aset properti, pertumbuhan investasi reksa dana, atau inflasi barang pokok secara berjangka.
+                        </p>
+                        <div class="bg-white p-3 rounded-xl border border-emerald-100 text-xs">
+                            <strong>Contoh Kasus:</strong> Kenaikan harga tanah 8% per tahun dari modal awal Rp 100 Juta.
+                        </div>
+                    </div>
+
+                    <!-- Peluruhan (Decay) Card -->
+                    <div class="bg-rose-50/60 p-5 rounded-2xl border border-rose-200">
+                        <div class="flex items-center space-x-2 mb-3">
+                            <i class="fa-solid fa-arrow-trend-down text-rose-600 text-lg"></i>
+                            <h3 class="font-bold text-slate-800 text-sm">2. Peluruhan / Depresiasi ($N_n$)</h3>
+                        </div>
+                        <div class="math-box p-3 rounded-xl text-center mb-3" style="border-left-color: #e11d48;">
+                            <span class="text-lg font-bold text-rose-800">$$N_n = N_0(1 - r)^n$$</span>
+                        </div>
+                        <p class="text-xs text-slate-600 leading-relaxed mb-3">
+                            Digunakan untuk menghitung penyusutan nilai barang ekonomis seperti laptop, smartphone, mobil, atau mesin pabrik dari waktu ke waktu.
+                        </p>
+                        <div class="bg-white p-3 rounded-xl border border-rose-100 text-xs">
+                            <strong>Contoh Kasus:</strong> Harga kendaraan menyusut 15% setiap tahun karena pemakaian.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Asset Value Simulator -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h3 class="font-bold text-slate-800 text-sm mb-4 flex items-center">
+                        <i class="fa-solid fa-laptop-code text-finance-600 mr-2"></i> Simulator Nilai Aset: Properti vs Kendaraan
+                    </h3>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs font-semibold text-slate-700 mb-2">Pilih Jenis Simulasi Aset:</label>
+                            <select id="f3-type" onchange="updateF3()" class="w-full p-2.5 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none mb-4">
+                                <option value="growth">Pertumbuhan (Tanah / Investasi +10%/thn)</option>
+                                <option value="decay">Peluruhan (Mobil / Gadget -15%/thn)</option>
+                            </select>
+
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Nilai Awal Aset ($N_0$): <span id="f3-n0-val" class="font-bold text-brand-600">Rp 200.000.000</span></label>
+                            <input type="range" id="f3-n0" min="10000000" max="500000000" step="10000000" value="200000000" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600 mb-4" oninput="updateF3()">
+
+                            <label class="block text-xs font-semibold text-slate-700 mb-1">Durasi ($n$ tahun): <span id="f3-years-val" class="font-bold text-brand-600">5 Tahun</span></label>
+                            <input type="range" id="f3-years" min="1" max="10" step="1" value="5" class="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-brand-600" oninput="updateF3()">
+                        </div>
+
+                        <div class="bg-white p-5 rounded-xl border border-slate-200 flex flex-col justify-between">
+                            <div>
+                                <span class="text-xs font-bold text-slate-400 uppercase tracking-wider block mb-1">Estimasi Nilai Aset Setelah Durasi:</span>
+                                <div id="f3-result" class="text-2xl font-extrabold text-brand-600 my-2">Rp 322.102.000</div>
+                                <p id="f3-explanation" class="text-xs text-slate-600 leading-relaxed mt-2">
+                                    Nilai aset mengalami kenaikan kumulatif karena faktor pertumbuhan eksponensial positif.
+                                </p>
+                            </div>
+                            <div class="p-3 bg-brand-50 rounded-lg border border-brand-100 text-[11px] text-brand-800 font-medium">
+                                <i class="fa-solid fa-lightbulb text-amber-500 mr-1"></i> Wawasan Finansial: Memahami peluruhan membantu kita membedakan mana barang 'aset' dan mana 'liabilitas'.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================================================================= -->
+        <!-- TAB REFLECTION & EVALUASI FORMATIF (20 SOAL LENGKAP) -->
+        <!-- ================================================================= -->
+        <section id="tab-reflection" class="tab-content hidden">
+            <div class="bg-white rounded-2xl p-6 border border-slate-200 shadow-sm mb-6">
+                <div class="border-b border-slate-100 pb-4 mb-6 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <span class="inline-block px-3 py-1 bg-brand-50 text-brand-600 font-bold text-xs rounded-full mb-2">Evaluasi Formatif & Refleksi</span>
+                        <h2 class="text-xl font-bold text-slate-800">Uji Pemahaman Komprehensif Matematika Keuangan</h2>
+                        <p class="text-sm text-slate-600 mt-1">Uji pemahamanmu pada Bunga Tunggal, Bunga Majemuk, Anuitas, dan Pertumbuhan/Peluruhan!</p>
+                    </div>
+
+                    <!-- Live Quiz Score Dashboard -->
+                    <div class="flex items-center space-x-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <div class="text-center px-3 border-r border-slate-200">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block">Terjawab</span>
+                            <span id="quiz-progress-text" class="text-base font-extrabold text-slate-800">0 / 20</span>
+                        </div>
+                        <div class="text-center px-3">
+                            <span class="text-[10px] text-slate-500 uppercase font-bold block">Skor Kamu</span>
+                            <span id="quiz-score-text" class="text-base font-extrabold text-brand-600">0 / 100</span>
+                        </div>
+                        <button onclick="resetQuiz()" class="text-xs bg-white text-slate-600 hover:text-brand-600 border border-slate-200 p-2 rounded-lg transition" title="Reset Kuis">
+                            <i class="fa-solid fa-rotate-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Topic Filter Buttons -->
+                <div class="flex flex-wrap gap-2 mb-6 items-center">
+                    <span class="text-xs font-bold text-slate-500 mr-2"><i class="fa-solid fa-filter text-brand-600"></i> Filter Topik:</span>
+                    <button onclick="filterQuiz('all')" id="qfilter-all" class="qfilter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-600 text-white transition">Semua Soal (20)</button>
+                    <button onclick="filterQuiz('F.1')" id="qfilter-F.1" class="qfilter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">F.1 Bunga Tunggal & Majemuk (7)</button>
+                    <button onclick="filterQuiz('F.2')" id="qfilter-F.2" class="qfilter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">F.2 Anuitas & Amortisasi (7)</button>
+                    <button onclick="filterQuiz('F.3')" id="qfilter-F.3" class="qfilter-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-100 text-slate-600 hover:bg-slate-200 transition">F.3 Pertumbuhan & Peluruhan (6)</button>
+                </div>
+
+                <!-- Formative Quiz Container -->
+                <div class="mb-8">
+                    <div id="quiz-container" class="space-y-6">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+
+                <!-- Self Reflection Form (Growth Mindset) -->
+                <div class="bg-slate-50 p-6 rounded-2xl border border-slate-200">
+                    <h3 class="text-base font-bold text-slate-800 mb-2 flex items-center">
+                        <i class="fa-solid fa-journal-whills text-emerald-600 mr-2"></i> Jurnal Refleksi Matematika & Finansial
+                    </h3>
+                    <p class="text-xs text-slate-600 mb-4">Refleksi mendalam membantu memperkuat pemahaman konsep dan membangun sikap bertumbuh (*Growth Mindset*).</p>
+
+                    <div class="space-y-4">
+                        <div>
+                            <label for="reflect-1" class="block text-xs font-semibold text-slate-700 mb-1">1. Konsep matematika keuangan mana (bunga, anuitas, atau peluruhan) yang merasa paling bermanfaat untuk masa depanmu? Mengapa?</label>
+                            <textarea id="reflect-1" rows="2" class="w-full p-3 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Tulis pendapat dan refleksi pemikiranmu..."></textarea>
+                        </div>
+                        <div>
+                            <label for="reflect-2" class="block text-xs font-semibold text-slate-700 mb-1">2. Ketika menghadapi soal hitungan anuitas atau bunga yang rumit, apa strategi belajar baru yang kamu terapkan?</label>
+                            <textarea id="reflect-2" rows="2" class="w-full p-3 border border-slate-200 rounded-xl text-xs focus:ring-2 focus:ring-brand-500 focus:outline-none" placeholder="Tulis strategi belajarmu di sini..."></textarea>
+                        </div>
+                        <button onclick="submitReflection()" class="px-5 py-2.5 bg-brand-600 text-white rounded-xl text-xs font-bold hover:bg-brand-700 transition flex items-center shadow-md">
+                            <i class="fa-solid fa-paper-plane mr-2"></i> Simpan Jurnal Refleksi (+50 XP)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-4 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center text-xs text-slate-500">
+            <p>Media Pembelajaran Interaktif Matematika Keuangan Fase F • Berbasis Kurikulum Merdeka & Pendekatan Deep Learning</p>
+        </div>
+    </footer>
+
+    <script>
+        // Global App State
+        let currentXP = 0;
+        let activeTab = 'f1';
+        let activeQuizFilter = 'all';
+        let answeredQuestions = {};
+        let quizScore = 0;
+        let f1ChartInstance = null;
+
+        const growthQuotes = [
+            "Kecerdasan finansial dan matematika bukanlah bakat lahir, melainkan otot mental yang terus tumbuh semakin kamu melatihnya!",
+            "Kesalahan dalam perhitungan bukan kegagalan, tapi petunjuk berharga tentang bagian mana yang perlu kita pelajari lebih dalam.",
+            "Bunga majemuk mengajarkan kita konsistensi: usaha kecil yang dilakukan secara teratur akan membesar secara eksponensial!",
+            "Jangan takut dengan rumus rumit. Uraikan menjadi bagian-bagian kecil, dan kamu pasti bisa menguasainya!"
+        ];
+        let quoteIndex = 0;
+
+        function nextQuote() {
+            quoteIndex = (quoteIndex + 1) % growthQuotes.length;
+            document.getElementById('growth-quote').innerText = `"${growthQuotes[quoteIndex]}"`;
+        }
+
+        function addXP(amount) {
+            currentXP += amount;
+            document.getElementById('xp-counter').innerText = currentXP;
+        }
+
+        // Tab Switching Logic
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(el => {
+                el.classList.remove('active', 'bg-brand-600', 'text-white');
+                el.classList.add('text-slate-600');
+            });
+
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            const activeBtn = document.getElementById(`tab-btn-${tabId}`);
+            if (activeBtn) {
+                activeBtn.classList.add('active');
+                activeBtn.classList.remove('text-slate-600');
+            }
+
+            activeTab = tabId;
+            if (tabId === 'f1') updateF1();
+            if (tabId === 'f2') updateF2();
+            if (tabId === 'f3') updateF3();
+            renderMath();
+        }
+
+        // --- TAB F.1 LOGIC ---
+        function updateF1() {
+            const M0 = parseFloat(document.getElementById('f1-modal').value);
+            const rate = parseFloat(document.getElementById('f1-rate').value) / 100;
+            const years = parseInt(document.getElementById('f1-years').value);
+
+            document.getElementById('f1-modal-display').innerText = 'Rp ' + M0.toLocaleString('id-ID');
+            document.getElementById('f1-rate-display').innerText = (rate * 100).toFixed(0) + '%';
+            document.getElementById('f1-years-display').innerText = years + ' Tahun';
+
+            const singleData = [];
+            const compoundData = [];
+            const labels = [];
+
+            for (let t = 0; t <= years; t++) {
+                labels.push('Thn ' + t);
+                const MnSingle = M0 * (1 + t * rate);
+                const MnCompound = M0 * Math.pow(1 + rate, t);
+                singleData.push(Math.round(MnSingle));
+                compoundData.push(Math.round(MnCompound));
+            }
+
+            const finalSingle = singleData[years];
+            const finalCompound = compoundData[years];
+
+            document.getElementById('f1-result-single').innerText = 'Rp ' + finalSingle.toLocaleString('id-ID');
+            document.getElementById('f1-result-compound').innerText = 'Rp ' + finalCompound.toLocaleString('id-ID');
+
+            // Render Chart.js
+            const ctx = document.getElementById('f1-chart')?.getContext('2d');
+            if (ctx) {
+                if (f1ChartInstance) f1ChartInstance.destroy();
+
+                f1ChartInstance = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Bunga Tunggal (Linier)',
+                                data: singleData,
+                                borderColor: '#64748b',
+                                backgroundColor: 'rgba(100, 116, 139, 0.1)',
+                                fill: true,
+                                tension: 0.1
+                            },
+                            {
+                                label: 'Bunga Majemuk (Eksponensial)',
+                                data: compoundData,
+                                borderColor: '#059669',
+                                backgroundColor: 'rgba(5, 150, 105, 0.15)',
+                                fill: true,
+                                tension: 0.3
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { position: 'top' },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return context.dataset.label + ': Rp ' + context.parsed.y.toLocaleString('id-ID');
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return 'Rp ' + (value / 1000000).toFixed(1) + 'Jt';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            renderMath();
+        }
+
+        function checkAnswerF1(btn, isCorrect, explanation) {
+            const feedback = document.getElementById('f1-quiz-feedback');
+            if (!feedback) return;
+            feedback.classList.remove('hidden', 'bg-emerald-100', 'text-emerald-800', 'bg-rose-100', 'text-rose-800');
+
+            if (isCorrect) {
+                feedback.classList.add('bg-emerald-100', 'text-emerald-800');
+                feedback.innerHTML = `<i class="fa-solid fa-circle-check mr-1.5"></i> ${explanation}`;
+                addXP(20);
+            } else {
+                feedback.classList.add('bg-rose-100', 'text-rose-800');
+                feedback.innerHTML = `<i class="fa-solid fa-circle-xmark mr-1.5"></i> ${explanation}`;
+            }
+            renderMath();
+        }
+
+        // --- TAB F.2 LOGIC ---
+        function updateF2() {
+            const M = parseFloat(document.getElementById('f2-loan').value) || 0;
+            const rate = (parseFloat(document.getElementById('f2-rate').value) || 0) / 100;
+            const n = parseInt(document.getElementById('f2-months').value) || 1;
+
+            if (M <= 0 || rate <= 0 || n <= 0) return;
+
+            // Annuity Formula: A = (M * i) / (1 - (1+i)^-n)
+            const A = (M * rate) / (1 - Math.pow(1 + rate, -n));
+            document.getElementById('f2-annuity-val').innerText = 'Rp ' + Math.round(A).toLocaleString('id-ID');
+
+            const tbody = document.getElementById('f2-amortization-body');
+            if (!tbody) return;
+
+            let currentBalance = M;
+            let htmlRows = '';
+
+            for (let t = 1; t <= n; t++) {
+                const interest_bt = currentBalance * rate;
+                const principal_at = A - interest_bt;
+                const endingBalance = Math.max(0, currentBalance - principal_at);
+
+                htmlRows += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-slate-800">${t}</td>
+                        <td class="p-3">Rp ${Math.round(currentBalance).toLocaleString('id-ID')}</td>
+                        <td class="p-3 text-rose-600 font-semibold">Rp ${Math.round(interest_bt).toLocaleString('id-ID')}</td>
+                        <td class="p-3 text-emerald-600 font-semibold">Rp ${Math.round(principal_at).toLocaleString('id-ID')}</td>
+                        <td class="p-3 font-bold text-slate-800">Rp ${Math.round(A).toLocaleString('id-ID')}</td>
+                        <td class="p-3 font-semibold text-slate-700">Rp ${Math.round(endingBalance).toLocaleString('id-ID')}</td>
+                    </tr>
+                `;
+
+                currentBalance = endingBalance;
+            }
+
+            tbody.innerHTML = htmlRows;
+            renderMath();
+        }
+
+        // --- TAB F.3 LOGIC ---
+        function updateF3() {
+            const type = document.getElementById('f3-type').value;
+            const N0 = parseFloat(document.getElementById('f3-n0').value);
+            const years = parseInt(document.getElementById('f3-years').value);
+
+            document.getElementById('f3-n0-val').innerText = 'Rp ' + N0.toLocaleString('id-ID');
+            document.getElementById('f3-years-val').innerText = years + ' Tahun';
+
+            let r = type === 'growth' ? 0.10 : 0.15; // 10% for growth, 15% for decay
+            let Nn = 0;
+
+            if (type === 'growth') {
+                Nn = N0 * Math.pow(1 + r, years);
+                document.getElementById('f3-result').innerText = 'Rp ' + Math.round(Nn).toLocaleString('id-ID');
+                document.getElementById('f3-result').className = 'text-2xl font-extrabold text-emerald-600 my-2';
+                document.getElementById('f3-explanation').innerText = `Dengan laju pertumbuhan 10% per tahun, aset bernilai Rp ${N0.toLocaleString('id-ID')} berkembang menjadi Rp ${Math.round(Nn).toLocaleString('id-ID')} dalam ${years} tahun.`;
+            } else {
+                Nn = N0 * Math.pow(1 - r, years);
+                document.getElementById('f3-result').innerText = 'Rp ' + Math.round(Nn).toLocaleString('id-ID');
+                document.getElementById('f3-result').className = 'text-2xl font-extrabold text-rose-600 my-2';
+                document.getElementById('f3-explanation').innerText = `Dengan penyusutan (depresiasi) 15% per tahun, estimasi harga aset yang semula Rp ${N0.toLocaleString('id-ID')} tersisa Rp ${Math.round(Nn).toLocaleString('id-ID')} setelah ${years} tahun.`;
+            }
+            renderMath();
+        }
+
+        // --- TAB REFLECTION & FORMATIVE QUIZ (20 QUESTIONS) ---
+        const quizQuestions = [
+            // --- TOPIC F.1: BUNGA TUNGGAL VS BUNGA MAJEMUK (1-7) ---
+            {
+                topic: "F.1",
+                q: "Modal sebesar Rp 4.000.000 disimpan di bank dengan sistem bunga tunggal 6% per tahun. Berapakah total bunga yang diperoleh setelah 3 tahun?",
+                options: ["Rp 720.000", "$Rp 240.000$", "$Rp 4.720.000$", "$Rp 800.000$"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Rumus Bunga Tunggal: $B = M_0 \\cdot n \\cdot i$.<br>$B = 4.000.000 \\times 3 \\times 0,06 = Rp 720.000$."
+            },
+            {
+                topic: "F.1",
+                q: "Pak Budi menyimpan modal Rp 10.000.000 dengan bunga majemuk 5% per tahun. Berapakah total modal Pak Budi pada akhir tahun ke-2?",
+                options: ["Rp 11.000.000", "Rp 11.025.000", "Rp 10.500.000", "Rp 11.250.000"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Rumus Bunga Majemuk: $M_2 = M_0(1+i)^2 = 10.000.000 \\times (1,05)^2 = 10.000.000 \\times 1,1025 = Rp 11.025.000$."
+            },
+            {
+                topic: "F.1",
+                q: "Perbedaan utama antara grafik pertumbuhan nilai akhir Bunga Tunggal dan Bunga Majemuk adalah...",
+                options: [
+                    "Bunga Tunggal berbentuk eksponensial, Bunga Majemuk linier",
+                    "Bunga Tunggal berbentuk linier (garis lurus), Bunga Majemuk eksponensial (melengkung ke atas)",
+                    "Kedua bunga memiliki grafik yang persis sama",
+                    "Bunga Majemuk makin lama nilainya makin menurun"
+                ],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Bunga tunggal bertambah konstan setiap periode (grafik linier), sedangkan bunga majemuk berbunga di atas bunga sehingga eksponensial."
+            },
+            {
+                topic: "F.1",
+                q: "Modal Rp 2.000.000 diperbungakan dengan bunga majemuk 10% per semester. Berapakah periode ($n$) yang digunakan jika modal disimpan selama 2 tahun?",
+                options: ["n = 2", "n = 4", "n = 10", "n = 24"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>1 tahun = 2 semester. Maka dalam 2 tahun terdapat $2 \\times 2 = 4$ semester ($n = 4$)."
+            },
+            {
+                topic: "F.1",
+                q: "Suatu modal $M_0$ dibungakan dengan bunga majemuk $i$ per tahun. Jika setelah $n$ tahun modal menjadi $M_n$, maka rumus menentukan modal awal $M_0$ adalah...",
+                options: ["$M_0 = M_n(1+i)^n$", "$M_0 = \\frac{M_n}{(1+i)^n}$", "$M_0 = M_n - (1+i)^n$", "$M_0 = M_n \\cdot n \\cdot i$"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Dari $M_n = M_0(1+i)^n$, jika kita isolasi $M_0$, diperoleh $M_0 = \\frac{M_n}{(1+i)^n}$ atau $M_0 = M_n(1+i)^{-n}$."
+            },
+            {
+                topic: "F.1",
+                q: "Seseorang meminjam uang di koperasi sebesar Rp 1.000.000 dengan bunga tunggal 2% per bulan. Berapa total uang yang harus dikembalikan setelah 5 bulan?",
+                options: ["Rp 1.100.000", "Rp 1.020.000", "Rp 1.050.000", "Rp 1.200.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Bunga = $1.000.000 \\times 2\\% \\times 5 = Rp 100.000$. Total pengembalian = $1.000.000 + 100.000 = Rp 1.100.000$."
+            },
+            {
+                topic: "F.1",
+                q: "Mengapa investasi jangka panjang lebih disarankan menggunakan skema bunga majemuk dibanding bunga tunggal?",
+                options: [
+                    "Karena bunga tunggal memerlukan biaya admin tinggi",
+                    "Karena efek efek penggandaan (compounding effect) membuat pertumbuhan uang semakin cepat seiring bertambahnya waktu",
+                    "Karena bunga majemuk tidak dipengaruhi oleh periode waktu",
+                    "Karena bunga tunggal nilainya fluktuatif"
+                ],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Efek *compounding* pada bunga majemuk membuat pokok investasi bertambah setiap periode, menghasilkan akumulasi hasil yang jauh lebih besar dalam jangka panjang."
+            },
+
+            // --- TOPIC F.2: ANUITAS & TABEL AMORTISASI (8-14) ---
+            {
+                topic: "F.2",
+                q: "Suatu pinjaman dilunasi dengan sistem anuitas bulanan sebesar Rp 500.000. Jika bunga pada bulan pertama adalah Rp 150.000, berapakah angsuran pokok pada bulan pertama?",
+                options: ["Rp 350.000", "Rp 650.000", "Rp 150.000", "Rp 500.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Anuitas $A = a_1 + b_1 \\Rightarrow a_1 = A - b_1 = 500.000 - 150.000 = Rp 350.000$."
+            },
+            {
+                topic: "F.2",
+                q: "Dalam tabel amortisasi anuitas pinjaman, karakteristik porsi angsuran pokok ($a_t$) dan porsi bunga ($b_t$) dari bulan ke bulan adalah...",
+                options: [
+                    "Porsi bunga makin membesar, porsi angsuran pokok makin mengecil",
+                    "Porsi angsuran pokok dan bunga nilainya tetap dari awal sampai akhir",
+                    "Porsi angsuran pokok makin membesar, porsi bunga makin mengecil",
+                    "Semua porsi acak"
+                ],
+                correct: 2,
+                explanation: "<strong>Kunci Jawaban: C</strong><br>Karena sisa utang berkurang setiap bulan, bunga ($b_t$) makin mengecil. Karena Anuitas ($A$) tetap, porsi pokok ($a_t = A - b_t$) otomatis membesar."
+            },
+            {
+                topic: "F.2",
+                q: "Pinjaman sebesar Rp 10.000.000 dilunasi dengan anuitas Rp 1.200.000 per bulan. Jika suku bunga 2% per bulan, besar bunga pada bulan pertama adalah...",
+                options: ["Rp 200.000", "Rp 100.000", "Rp 1.000.000", "Rp 240.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Bunga bulan ke-1: $b_1 = M_0 \\cdot i = 10.000.000 \\times 2\\% = Rp 200.000$."
+            },
+            {
+                topic: "F.2",
+                q: "Hubungan antara angsuran ke-$(t+1)$ dengan angsuran ke-$t$ dalam anuitas dengan bunga $i$ dapat dinyatakan dengan rumus...",
+                options: ["$a_{t+1} = a_t(1+i)$", "$a_{t+1} = a_t - i$", "$a_{t+1} = a_t / (1+i)$", "$a_{t+1} = a_t + A$"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Angsuran pokok membentuk deret geometri dengan rasio $(1+i)$, sehingga $a_{t+1} = a_t(1+i)$."
+            },
+            {
+                topic: "F.2",
+                q: "Rani mengambil KPR rumah dengan Anuitas Rp 3.000.000/bulan. Pada bulan ke-5, porsi angsuran pokoknya Rp 2.100.000. Berapa porsi bunga yang dibayar Rani pada bulan ke-5 tersebut?",
+                options: ["Rp 900.000", "Rp 5.100.000", "Rp 1.100.000", "Rp 2.100.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>$b_5 = A - a_5 = 3.000.000 - 2.100.000 = Rp 900.000$."
+            },
+            {
+                topic: "F.2",
+                q: "Jika sisa pinjaman pada awal periode ke-3 adalah Rp 8.000.000 dan suku bunga 1,5% per bulan, berapakah besarnya bunga periode ke-3 ($b_3$)?",
+                options: ["Rp 120.000", "Rp 150.000", "Rp 80.000", "Rp 180.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>$b_3 = Sisa\\ Utang_2 \\times i = 8.000.000 \\times 1,5\\% = Rp 120.000$."
+            },
+            {
+                topic: "F.2",
+                q: "Seorang nasabah telah melunasi seluruh angsuran pada periode akhir tenor. Berapakah sisa utang pada tabel amortisasi baris paling akhir?",
+                options: ["Rp 0", "Sama dengan Anuitas", "Sama dengan Bunga awal", "Tergantung suku bunga"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Tujuan amortisasi adalah melunasi seluruh pokok utang beserta bunganya, sehingga sisa utang di akhir periode tenor menjadi Rp 0."
+            },
+
+            // --- TOPIC F.3: PERTUMBUHAN & PELURUHAN (15-20) ---
+            {
+                topic: "F.3",
+                q: "Harga sebidang tanah saat ini adalah Rp 100.000.000. Jika harga tanah mengalami pertumbuhan 10% per tahun, berapakah perkiraan harga tanah setelah 2 tahun?",
+                options: ["Rp 120.000.000", "Rp 121.000.000", "Rp 110.000.000", "Rp 130.000.000"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Pertumbuhan: $N_2 = N_0(1+r)^2 = 100.000.000 \\times (1,10)^2 = 100.000.000 \\times 1,21 = Rp 121.000.000$."
+            },
+            {
+                topic: "F.3",
+                q: "Sebuah mobil dibeli dengan harga Rp 200.000.000. Nilai jual mobil tersebut mengalami depresiasi (peluruhan) sebesar 10% setiap tahun. Berapakah nilai jual mobil setelah 1 tahun?",
+                options: ["Rp 180.000.000", "Rp 190.000.000", "Rp 160.000.000", "Rp 170.000.000"],
+                correct: 0,
+                explanation: "<strong>Kunci Jawaban: A</strong><br>Peluruhan: $N_1 = N_0(1-r)^1 = 200.000.000 \\times (1 - 0,10) = Rp 180.000.000$."
+            },
+            {
+                topic: "F.3",
+                q: "Rumus umum untuk pemodelan peluruhan eksponensial nilai aset adalah...",
+                options: ["$N_n = N_0(1+r)^n$", "$N_n = N_0(1-r)^n$", "$N_n = N_0 \\cdot n \\cdot r$", "$N_n = N_0 / (1+r)$"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Peluruhan menggunakan pengurang $(1-r)$ karena nilainya menyusut setiap periode."
+            },
+            {
+                topic: "F.3",
+                q: "Seseorang membeli smartphone seharga Rp 10.000.000. Setiap tahun nilainya menyusut 20%. Berapa harga smartphone tersebut setelah 2 tahun?",
+                options: ["Rp 6.000.000", "Rp 6.400.000", "Rp 8.000.000", "Rp 7.200.000"],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>$N_2 = 10.000.000 \\times (1 - 0,20)^2 = 10.000.000 \\times (0,80)^2 = 10.000.000 \\times 0,64 = Rp 6.400.000$."
+            },
+            {
+                topic: "F.3",
+                q: "Dampak inflasi tahunan sebesar 5% terhadap daya beli uang simpanan tanpa bunga di masa depan merupakan contoh dari...",
+                options: [
+                    "Pertumbuhan nominal",
+                    "Peluruhan secara riil terhadap nilai daya beli uang",
+                    "Anuitas tetap",
+                    "Amortisasi utang"
+                ],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Inflasi mengikis daya beli riil uang simpanan secara eksponensial seiring waktu jika tidak diperbungakan."
+            },
+            {
+                topic: "F.3",
+                q: "Jika suatu investasi reksa dana tumbuh dari Rp 5.000.000 menjadi Rp 8.050.000 dalam beberapa tahun, faktor utama yang mempengaruhinya adalah...",
+                options: [
+                    "Tingkat depresiasi barang",
+                    "Laju pertumbuhan majemuk hasil investasi",
+                    "Pemotongan angsuran pokok",
+                    "Peluruhan nilai obligasi"
+                ],
+                correct: 1,
+                explanation: "<strong>Kunci Jawaban: B</strong><br>Akumulasi hasil investasi yang meningkat merupakan hasil dari laju pertumbuhan eksponensial."
+            }
+        ];
+
+        function filterQuiz(topic) {
+            activeQuizFilter = topic;
+            document.querySelectorAll('.qfilter-btn').forEach(btn => {
+                btn.classList.remove('bg-brand-600', 'text-white');
+                btn.classList.add('bg-slate-100', 'text-slate-600');
+            });
+            const activeBtn = document.getElementById(`qfilter-${topic}`);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-brand-600', 'text-white');
+                activeBtn.classList.remove('bg-slate-100', 'text-slate-600');
+            }
+            renderQuiz();
+        }
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            if (!container) return;
+
+            const filteredQuestions = quizQuestions.map((q, idx) => ({ ...q, originalIndex: idx }))
+                .filter(q => activeQuizFilter === 'all' || q.topic === activeQuizFilter);
+
+            container.innerHTML = filteredQuestions.map((q) => {
+                const idx = q.originalIndex;
+                const isAnswered = answeredQuestions.hasOwnProperty(idx);
+                const userAnswer = answeredQuestions[idx];
+
+                return `
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-200 transition-all">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="px-2.5 py-1 bg-brand-100 text-brand-700 text-[10px] font-bold rounded-md uppercase">Topik ${q.topic} • Soal #${idx + 1}</span>
+                            ${isAnswered ? `<span class="text-xs font-bold ${userAnswer === q.correct ? 'text-emerald-600' : 'text-rose-600'}">
+                                ${userAnswer === q.correct ? '<i class="fa-solid fa-circle-check"></i> Benar' : '<i class="fa-solid fa-circle-xmark"></i> Kurang Tepat'}
+                            </span>` : ''}
+                        </div>
+                        <p class="text-sm font-bold text-slate-800 mb-4 leading-relaxed">${q.q}</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mb-3">
+                            ${q.options.map((opt, optIdx) => {
+                                let btnStyle = "bg-white border-slate-200 hover:bg-slate-100 text-slate-700";
+                                if (isAnswered) {
+                                    if (optIdx === q.correct) {
+                                        btnStyle = "bg-emerald-500 border-emerald-500 text-white font-bold";
+                                    } else if (optIdx === userAnswer && userAnswer !== q.correct) {
+                                        btnStyle = "bg-rose-500 border-rose-500 text-white font-bold";
+                                    } else {
+                                        btnStyle = "bg-slate-100 border-slate-200 text-slate-400 opacity-60";
+                                    }
+                                }
+                                return `
+                                    <button ${isAnswered ? 'disabled' : ''} onclick="submitQuizAnswer(${idx}, ${optIdx})" class="p-3 text-xs text-left border rounded-xl font-medium transition duration-150 ${btnStyle}">
+                                        ${opt}
+                                    </button>
+                                `;
+                            }).join('')}
+                        </div>
+
+                        <!-- Instant Key & Scaffolding Explanation -->
+                        <div id="quiz-feedback-${idx}" class="${isAnswered ? '' : 'hidden'} text-xs p-4 rounded-xl mt-3 ${isAnswered ? (userAnswer === q.correct ? 'bg-emerald-50 border border-emerald-200 text-emerald-900' : 'bg-amber-50 border border-amber-200 text-amber-900') : ''}">
+                            <div class="font-semibold mb-1 text-slate-800 flex items-center">
+                                <i class="fa-solid fa-lightbulb text-amber-500 mr-2"></i> Pembahasan Langkah Demi Langkah:
+                            </div>
+                            <div class="mt-2 text-xs leading-relaxed space-y-1">${q.explanation}</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            updateQuizStats();
+            renderMath();
+        }
+
+        function submitQuizAnswer(qIdx, selectedOpt) {
+            if (answeredQuestions.hasOwnProperty(qIdx)) return;
+
+            answeredQuestions[qIdx] = selectedOpt;
+            const q = quizQuestions[qIdx];
+
+            if (selectedOpt === q.correct) {
+                quizScore += 5; // 5 points per question = 100 total
+                addXP(15);
+            }
+
+            renderQuiz();
+        }
+
+        function updateQuizStats() {
+            const totalAnswered = Object.keys(answeredQuestions).length;
+            const progressElem = document.getElementById('quiz-progress-text');
+            const scoreElem = document.getElementById('quiz-score-text');
+
+            if (progressElem) progressElem.innerText = `${totalAnswered} / 20`;
+            if (scoreElem) scoreElem.innerText = `${quizScore} / 100`;
+        }
+
+        function resetQuiz() {
+            if (Object.keys(answeredQuestions).length === 0) return;
+            if (confirm("Apakah kamu yakin ingin mengulang kuis dari awal?")) {
+                answeredQuestions = {};
+                quizScore = 0;
+                renderQuiz();
+            }
+        }
+
+        function submitReflection() {
+            const r1 = document.getElementById('reflect-1')?.value;
+            const r2 = document.getElementById('reflect-2')?.value;
+
+            if(!r1 || !r2) {
+                alert('Tuliskan refleksi singkatmu terlebih dahulu ya!');
+                return;
+            }
+
+            addXP(50);
+            alert('Jurnal Refleksi Berhasil Disimpan! +50 XP. Kamu adalah pembelajar mandiri yang hebat!');
+        }
+
+        // Utility to render Math Formulas via KaTeX
+        function renderMath() {
+            if (window.renderMathInElement) {
+                renderMathInElement(document.body, {
+                    delimiters: [
+                        {left: '$$', right: '$$', display: true},
+                        {left: '$', right: '$', display: false}
+                    ],
+                    throwOnError : false
+                });
+            }
+        }
+
+        // Initial Load Setup
+        window.onload = function() {
+            updateF1();
+            updateF2();
+            updateF3();
+            renderQuiz();
+            renderMath();
+        };
+    </script>
+</body>
+</html>
